@@ -1,0 +1,83 @@
+package co.edu.uptc.view;
+
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+public class TaskManagerApp extends JFrame {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextField descriptionField, dueDateField, userField;
+    private JTextArea taskListArea;
+    private JButton addButton;
+    private JButton clearButton;
+
+    public TaskManagerApp() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Task Manager");
+
+        JPanel inputPanel = new JPanel(new GridLayout(4, 2));
+        inputPanel.add(new JLabel("Description:"));
+        descriptionField = new JTextField();
+        inputPanel.add(descriptionField);
+        inputPanel.add(new JLabel("Due Date (yyyy-mm-dd):"));
+        dueDateField = new JTextField();
+        inputPanel.add(dueDateField);
+        inputPanel.add(new JLabel("Assigned User:"));
+        userField = new JTextField();
+        inputPanel.add(userField);
+        addButton = new JButton("Add Task");
+        inputPanel.add(addButton);
+        clearButton = new JButton("Clear Fields");
+        inputPanel.add(clearButton);
+
+        taskListArea = new JTextArea();
+        JScrollPane scrollPane = new JScrollPane(taskListArea);
+
+        add(inputPanel, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+
+        setSize(600, 400);
+        setVisible(true);
+    }
+
+    public String getDescription() {
+        return descriptionField.getText();
+    }
+
+    public String getDueDate() {
+        return dueDateField.getText();
+    }
+
+    public String getAssignedUser() {
+        return userField.getText();
+    }
+
+    public void setAddButtonListener(ActionListener listener) {
+        addButton.addActionListener(listener);
+    }
+    
+    public void setClearButtonListener(ActionListener listener) {
+        clearButton.addActionListener(listener);
+    }
+
+    public void updateTaskList(String taskInfo) {
+        taskListArea.append(taskInfo + "\n");
+    }
+    
+    public void clearFields() {
+        descriptionField.setText("");
+        dueDateField.setText("");
+        userField.setText("");
+    }
+}

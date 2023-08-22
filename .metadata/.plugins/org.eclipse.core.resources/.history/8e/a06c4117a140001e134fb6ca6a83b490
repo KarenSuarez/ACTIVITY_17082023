@@ -1,0 +1,10 @@
+package co.edu.uptc;
+
+import javax.swing.SwingUtilities;
+
+import co.edu.uptc.presenter.CartPresenter;
+import co.edu.uptc.view.CartView;
+
+public class Main {
+	
+}

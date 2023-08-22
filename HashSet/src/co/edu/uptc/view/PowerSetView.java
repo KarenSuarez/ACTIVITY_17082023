@@ -1,0 +1,65 @@
+package co.edu.uptc.view;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.util.Set;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import co.edu.uptc.presenter.PowerSetPresenter;
+
+public class PowerSetView extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextArea outputTextArea;
+	private JTextField inputTextField;
+	private JButton generateButton;
+	private PowerSetPresenter presenter;
+
+	public PowerSetView(PowerSetPresenter presenter) {
+		this.presenter = presenter;
+
+		setTitle("Generador de Conjunto Potencia");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLayout(new BorderLayout());
+
+		outputTextArea = new JTextArea(10, 40);
+		outputTextArea.setEditable(false);
+		add(new JScrollPane(outputTextArea), BorderLayout.CENTER);
+
+		JPanel inputPanel = new JPanel(new FlowLayout());
+		inputTextField = new JTextField(20);
+		generateButton = new JButton("Generar Conjunto Potencia");
+
+		inputPanel.add(new JLabel("Conjunto de entrada (ejemplo: 1,2,3):"));
+		inputPanel.add(inputTextField);
+		inputPanel.add(generateButton);
+
+		add(inputPanel, BorderLayout.SOUTH);
+
+		generateButton.addActionListener(e -> {
+			String input = inputTextField.getText();
+			presenter.generatePowerSet(input);
+		});
+
+		pack();
+		setLocationRelativeTo(null);
+		setVisible(true);
+	}
+
+	public void updatePowerSet(Set<Set<Integer>> powerSet) {
+		StringBuilder output = new StringBuilder();
+		for (Set<Integer> subset : powerSet) {
+			output.append(subset).append("\n");
+		}
+		outputTextArea.setText(output.toString());
+	}
+}

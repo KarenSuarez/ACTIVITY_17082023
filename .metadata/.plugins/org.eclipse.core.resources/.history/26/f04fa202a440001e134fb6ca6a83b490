@@ -1,0 +1,96 @@
+import java.util.Stack;
+import java.util.Map;
+import java.util.HashMap;
+import java.lang.Math;
+
+public class ExpressionEvaluator {
+    private static final Map<String, Integer> OPERATOR_PRECEDENCE = new HashMap<>();
+    static {
+        OPERATOR_PRECEDENCE.put("+", 1);
+        OPERATOR_PRECEDENCE.put("-", 1);
+        OPERATOR_PRECEDENCE.put("*", 2);
+        OPERATOR_PRECEDENCE.put("/", 2);
+    }
+
+    public double evaluateExpression(String expression) {
+        expression = expression.replaceAll("\\s", ""); // Remove spaces
+        Stack<Double> operandStack = new Stack<>();
+        Stack<String> operatorStack = new Stack<>();
+
+        for (int i = 0; i < expression.length(); i++) {
+            char ch = expression.charAt(i);
+
+            if (Character.isDigit(ch)) {
+                StringBuilder numBuilder = new StringBuilder();
+                while (i < expression.length() && (Character.isDigit(expression.charAt(i)) || expression.charAt(i) == '.')) {
+                    numBuilder.append(expression.charAt(i));
+                    i++;
+                }
+                i--; // Move back by one to account for the extra increment in the loop
+                operandStack.push(Double.parseDouble(numBuilder.toString()));
+            } else if (ch == '(') {
+                operatorStack.push("(");
+            } else if (ch == ')') {
+                while (!operatorStack.peek().equals("(")) {
+                    applyOperation(operandStack, operatorStack);
+                }
+                operatorStack.pop(); // Pop the '('
+            } else if (Character.isLetter(ch)) { // Handle functions
+                StringBuilder funcBuilder = new StringBuilder();
+                while (i < expression.length() && Character.isLetter(expression.charAt(i))) {
+                    funcBuilder.append(expression.charAt(i));
+                    i++;
+                }
+                i--; // Move back by one to account for the extra increment in the loop
+                String functionName = funcBuilder.toString();
+                if (functionName.equals("sen")) {
+                    operatorStack.push("sen");
+                }
+            } else {
+                String operator = Character.toString(ch);
+                while (!operatorStack.isEmpty() && !operatorStack.peek().equals("(") && hasHigherPrecedence(operator, operatorStack.peek())) {
+                    applyOperation(operandStack, operatorStack);
+                }
+                operatorStack.push(operator);
+            }
+        }
+
+        while (!operatorStack.isEmpty()) {
+            applyOperation(operandStack, operatorStack);
+        }
+
+        return operandStack.pop();
+    }
+
+    private boolean hasHigherPrecedence(String op1, String op2) {
+        return OPERATOR_PRECEDENCE.get(op1) > OPERATOR_PRECEDENCE.get(op2);
+    }
+
+    private void applyOperation(Stack<Double> operandStack, Stack<String> operatorStack) {
+        String operator = operatorStack.pop();
+        if (operator.equals("sen")) {
+            double operand = operandStack.pop();
+            operandStack.push(Math.sin(Math.toRadians(operand)));
+        } else {
+            double operand2 = operandStack.pop();
+            double operand1 = operandStack.pop();
+            double result = performOperation(operand1, operand2, operator);
+            operandStack.push(result);
+        }
+    }
+
+    private double performOperation(double operand1, double operand2, String operator) {
+        switch (operator) {
+            case "+":
+                return operand1 + operand2;
+            case "-":
+                return operand1 - operand2;
+            case "*":
+                return operand1 * operand2;
+            case "/":
+                return operand1 / operand2;
+            default:
+                return 0.0;
+        }
+    }
+}

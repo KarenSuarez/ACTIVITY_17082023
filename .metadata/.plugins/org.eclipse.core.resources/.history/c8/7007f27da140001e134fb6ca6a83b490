@@ -1,0 +1,51 @@
+package co.edu.uptc.presenter;
+import java.util.PriorityQueue;
+
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+
+import co.edu.uptc.model.Patient;
+import co.edu.uptc.view.MainView;
+
+public class Presenter {
+    private PriorityQueue<Patient> patientQueue;
+    private MainView view;
+
+    public Presenter() {
+        patientQueue = new PriorityQueue<>();
+        view = new MainView(this);
+    }
+
+    public void addPatient(String name, int severity) {
+        Patient patient = new Patient(name, severity);
+        patientQueue.add(patient);
+        updatePatientList();
+    }
+
+    public void treatNextPatient() {
+        if (!patientQueue.isEmpty()) {
+            patientQueue.poll(); // Remove the highest priority patient
+            updatePatientList();
+        } else {
+            JOptionPane.showMessageDialog(null, "No hay pacientes en espera.");
+        }
+    }
+
+    private void updatePatientList() {
+        StringBuilder patientList = new StringBuilder();
+        for (Patient patient : patientQueue) {
+            patientList.append("Nombre: ").append(patient.getName())
+                    .append(", Gravedad: ").append(patient.getSeverity())
+                    .append("\n");
+        }
+        view.updatePatientList(patientList.toString());
+    }
+
+    public void start() {
+        SwingUtilities.invokeLater(() -> {
+            view = new MainView(this);
+            view.setVisible(true);
+        });
+    }
+    
+}

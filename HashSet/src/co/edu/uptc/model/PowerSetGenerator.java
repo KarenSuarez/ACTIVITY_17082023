@@ -1,0 +1,28 @@
+package co.edu.uptc.model;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class PowerSetGenerator {
+	public Set<Set<Integer>> generatePowerSet(Set<Integer> inputSet) {
+		Set<Set<Integer>> powerSet = new HashSet<>();
+		generatePowerSetRecursive(inputSet, new HashSet<>(), powerSet);
+		return powerSet;
+	}
+
+	private void generatePowerSetRecursive(Set<Integer> remaining, Set<Integer> current, Set<Set<Integer>> result) {
+		if (remaining.isEmpty()) {
+			result.add(new HashSet<>(current));
+			return;
+		}
+
+		Integer next = remaining.iterator().next();
+		remaining.remove(next);
+
+		generatePowerSetRecursive(remaining, current, result);
+		current.add(next);
+		generatePowerSetRecursive(remaining, current, result);
+		current.remove(next);
+		remaining.add(next);
+	}
+}

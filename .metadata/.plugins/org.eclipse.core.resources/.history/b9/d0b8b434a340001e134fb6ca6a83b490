@@ -1,0 +1,10 @@
+package co.edu.uptc.model;
+import java.util.Stack;
+
+public class ExpressionEvaluator {
+    public double evaluateExpression(String expression) {
+        // Implementa la lógica de análisis y evaluación aquí
+        // Utiliza una pila para gestionar los operadores, números y paréntesis
+        return 0.0; // Devuelve el resultado de la evaluación
+    }
+}

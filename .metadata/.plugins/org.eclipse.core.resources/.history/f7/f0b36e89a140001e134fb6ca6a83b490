@@ -1,0 +1,78 @@
+package co.edu.uptc.view;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import co.edu.uptc.presenter.Presenter;
+
+public class MainView extends JFrame {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JTextArea outputTextArea;
+    private JTextField nameTextField;
+    private JTextField severityTextField;
+    private JButton addButton;
+    private JButton treatButton;
+
+    public MainView(Presenter presenter) {
+        setTitle("Centro Médico");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        outputTextArea = new JTextArea(10, 40);
+        outputTextArea.setEditable(false);
+        add(new JScrollPane(outputTextArea), BorderLayout.CENTER);
+
+        JPanel inputPanel = new JPanel(new FlowLayout());
+        nameTextField = new JTextField(15);
+        severityTextField = new JTextField(5);
+        addButton = new JButton("Añadir Paciente");
+        treatButton = new JButton("Atender Paciente");
+
+        inputPanel.add(new JLabel("Nombre:"));
+        inputPanel.add(nameTextField);
+        inputPanel.add(new JLabel("Gravedad:"));
+        inputPanel.add(severityTextField);
+        inputPanel.add(addButton);
+        inputPanel.add(treatButton);
+
+        add(inputPanel, BorderLayout.SOUTH);
+
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameTextField.getText();
+                int severity = Integer.parseInt(severityTextField.getText());
+                presenter.addPatient(name, severity);
+                nameTextField.setText("");
+                severityTextField.setText("");
+            }
+        });
+
+        treatButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                presenter.treatNextPatient();
+            }
+        });
+
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    public void updatePatientList(String patientList) {
+        outputTextArea.setText(patientList);
+    }
+}
